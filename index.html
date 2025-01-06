@@ -1,59 +1,407 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
-    <title>Hubble Demo</title>
+    <title>Universal Links Tester</title>
+    <!-- Google Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --success: #10B981;
+            --background: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .input-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background-color: var(--card-bg);
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .links-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .link-card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .link-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .link-title i {
+            color: var(--primary);
+        }
+
+        .link-url {
+            display: block;
+            word-break: break-all;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            text-decoration: none;
+        }
+
+        .link-url:hover {
+            color: var(--primary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: #F3F4F6;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E5E7EB;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <header class="gui-header">
-        <div id="header-title">Hubble</div>
-    </header>
-    <section class="hubs-wrap">
-        <div id="hubs"></div>
-    </section>
-        <div><a href="https://devtest.handbookx.com/app-" target="_blank" title="超链接的介绍信息">https://devtest.handbookx.com</a></div>
-<div>&nbsp;</div>
-    <div><a href="https://mydev.handbookx.com/app-" target="_blank" title="超链接的介绍信息">https://mydev.handbookx.com</a></div>
-<div>&nbsp;</div>
-    <div><a href="https://my.handbookx.com/app-" target="_blank" title="超链接的介绍信息">https://my.handbookx.com</a></div>
-<div>&nbsp;</div>
-        <div><span><a href="https://my.handbookx.com/app-signup" target="_blank" title="超链接的介绍信息">signup</a></span></div>
-    <div>&nbsp;</div>
-    <div><span><a href="https://my.handbookx.com/app-signup?invitationcode=843693&email=qqq@uuf.me" target="_blank" title="超链接的介绍信息">https://my.handbookx.com/app-signup?invitationcode=843693&email=qqq@uuf.me</a></span></div>
-    <div>&nbsp;</div>
-        <div><span><a href="https://mydev.handbookx.com/app-signup?invitationcode=843693&email=qqq@uuf.me" target="_blank" title="超链接的介绍信息">https://mydev.handbookx.com/app-signup?invitationcode=843693&email=qqq@uuf.me</a></span></div>
-    <div>&nbsp;</div>
-    <div>&nbsp;</div>
-        <div><span><a href="https://devtest.handbookx.com/app-signup?invitationcode=843693&email=qqq@uuf.me" target="_blank" title="超链接的介绍信息">https://devtest.handbookx.com/app-signup?invitationcode=843693&email=qqq@uuf.me</a></span></div>
-    <div>&nbsp;</div>
-    <div><span><a href="https://my.handbookx.com/app-signup?email=qqq@uuf.me" target="_blank" title="超链接的介绍信息">signup only email</a></span></div>
-    <div>&nbsp;</div>
-    <div><a href="https://mydev.handbookx.com/app-book?id=231123" target="_blank" title="超链接的介绍信息">Myself</a></div>
-    <div>&nbsp;</div>
-   <div><a href="https://mydev.handbookx.com/app-section" target="_blank" title="超链接的介绍信息">Myself</a></div>
-    <div></div>
-    </div>
-<div>&nbsp;</div>
+    <div class="container">
+        <header class="header">
+            <h1>Universal Links Tester</h1>
+            <p>测试各种环境下的Universal Links</p>
+        </header>
 
-<div><a href="https://mydev.handbookx.com/app-book?id=961AE2FC-7BD6-4B30-8BB3-4ABD4D46264F">https://mydev.handbookx.com/book?id=961AE2FC-7BD6-4B30-8BB3-4ABD4D46264F</a></div>
-    
-    <div>&nbsp;</div>
-    
-<div><a href="https://mydev.handbookx.com/app-section?bookId=961AE2FC-7BD6-4B30-8BB3-4ABD4D46264F&sectionId=541C98B9-3B1F-4BF9-8EF1-280D234DE582">https://mydev.handbookx.com/section?bookId=961AE2FC-7BD6-4B30-8BB3-4ABD4D46264F&sectionId=541C98B9-3B1F-4BF9-8EF1-280D234DE582</a></div>
-        <div>&nbsp;</div>
-<div><a href="https://mydev.handbookx.com/app-section?bookId=359E11DB-276C-4BE2-A0A0-CA2F24EFFDF1&sectionId=541C98B9-3B1F-4BF9-8EF1-280D234DE582">https://mydev.handbookx.com/section?bookId=961AE2FC-7BD6-4B30-8BB3-4ABD4D46264F&sectionId=541C98B9-3B1F-4BF9-8EF1-280D234DE582</a></div>
-        <div>&nbsp;</div>
-    <div><a href="https://mydev.handbookx.com/app-book?id=359E11DB-276C-4BE2-A0A0-CA2F24EFFDF1">https://mydev.handbookx.com/book?id=359E11DB-276C-4BE2-A0A0-CA2F24EFFDF1</a></div>
-    
-    <div>&nbsp;</div>
-    
-    <div><a href="https://mydev.handbookx.com/app-section?bookId=359E11DB-276C-4BE2-A0A0-CA2F24EFFDF1&sectionId=1D7CD3AD-4A95-42C6-810B-CE45B90FB018">https://mydev.handbookx.com/section?bookId=359E11DB-276C-4BE2-A0A0-CA2F24EFFDF1&sectionId=1D7CD3AD-4A95-42C6-810B-CE45B90FB018</a></div>
-        <div>&nbsp;</div>
-    
-    <div><a href="https://mydev.handbookx.com/app-accesscode?code=FCKS-3220-4000">https://mydev.handbookx.com/accesscode?code=FCKS-3220-4000</a></div>
-        <div>&nbsp;</div>
-        
-    <div><a href="https://mydev.handbookx.com/app-">https://mydev.handbookx.com</a></div>
-        <div>&nbsp;</div>
-</body></html>
+        <div class="input-group">
+            <div class="input-wrapper">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="emailInput" class="custom-input" placeholder="自定义邮箱">
+            </div>
+            <div class="input-wrapper">
+                <i class="fas fa-key"></i>
+                <input type="text" id="codeInput" class="custom-input" placeholder="自定义验证码/邀请码">
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('production')">
+                <i class="fas fa-globe"></i> Production
+            </button>
+            <button class="tab" onclick="showTab('development')">
+                <i class="fas fa-code-branch"></i> Development
+            </button>
+            <button class="tab" onclick="showTab('testing')">
+                <i class="fas fa-vial"></i> Testing
+            </button>
+        </div>
+
+        <div id="production" class="tab-content active"></div>
+        <div id="development" class="tab-content"></div>
+        <div id="testing" class="tab-content"></div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check"></i> 链接已复制到剪贴板
+    </div>
+
+    <script>
+        const environments = {
+            production: 'my.handbookx.com',
+            development: 'mydev.handbookx.com',
+            testing: 'devtest.handbookx.com'
+        };
+
+        const linkTypes = {
+            login: {
+                title: '登录链接',
+                icon: 'fa-sign-in-alt',
+                template: (env, email, code) =>
+                    `https://${env}/app-login?verificationcode=${code || '941546'}&email=${email || 'test@example.com'}`
+            },
+            signup: {
+                title: '注册链接',
+                icon: 'fa-user-plus',
+                template: (env, email, code) =>
+                    `https://${env}/app-signup?invitationcode=${code || '843693'}&email=${email || 'test@example.com'}`
+            },
+            book: {
+                title: '书籍链接',
+                icon: 'fa-book',
+                template: (env, _, id) =>
+                    `https://${env}/app-book?id=${id || '231123'}`
+            },
+            section: {
+                title: '章节链接',
+                icon: 'fa-bookmark',
+                template: (env) =>
+                    `https://${env}/app-section`
+            },
+            accessCode: {
+                title: '访问码链接',
+                icon: 'fa-key',
+                template: (env, _, code) =>
+                    `https://${env}/app-accesscode?code=${code || 'FCKS-3220-4000'}`
+            }
+        };
+
+        function createLinkCard(title, icon, url) {
+            return `
+                <div class="link-card">
+                    <div class="link-title">
+                        <i class="fas ${icon}"></i>
+                        ${title}
+                    </div>
+                    <a href="${url}" class="link-url" target="_blank">${url}</a>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="copyToClipboard('${url}')">
+                            <i class="fas fa-copy"></i> 复制链接
+                        </button>
+                        <a href="${url}" target="_blank" class="btn btn-secondary">
+                            <i class="fas fa-external-link-alt"></i> 打开
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateLinks() {
+            const email = document.getElementById('emailInput').value;
+            const code = document.getElementById('codeInput').value;
+
+            Object.entries(environments).forEach(([envKey, envDomain]) => {
+                const container = document.getElementById(envKey);
+                container.innerHTML = '<div class="links-grid">';
+
+                Object.entries(linkTypes).forEach(([_, {title, icon, template}]) => {
+                    const url = template(envDomain, email, code);
+                    container.innerHTML += createLinkCard(title, icon, url);
+                });
+
+                container.innerHTML += '</div>';
+            });
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName).style.display = 'block';
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast();
+            } catch (err) {
+                console.error('复制失败: ', err);
+            }
+        }
+
+        // 初始化页面
+        document.getElementById('emailInput').addEventListener('input', updateLinks);
+        document.getElementById('codeInput').addEventListener('input', updateLinks);
+        updateLinks();
+
+        // 初始化标签页显示
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.style.display = 'none';
+        });
+        document.getElementById('production').style.display = 'block';
+    </script>
+</body>
+</html>
